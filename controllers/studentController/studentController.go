@@ -15,7 +15,17 @@ func Index(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": students})
 }
 
-func Store(c *gin.Context) {}
+func Store(c *gin.Context) {
+	var student models.Student
+
+	if err := c.ShouldBindJSON(&student); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	models.DB.Create(&student)
+	c.JSON(http.StatusOK, gin.H{"student": student})
+}
 
 func Show(c *gin.Context) {
 	var student models.Student
