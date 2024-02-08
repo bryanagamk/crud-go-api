@@ -45,5 +45,23 @@ func Show(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": student})
 }
 
-func Update(c *gin.Context) {}
+func Update(c *gin.Context) {
+	var student models.Student
+	id := c.Param("id")
+
+	if err := c.ShouldBindJSON(&student); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	idAffected := models.DB.Model(&student).Where("id_student = ?", id).Updates(&student).RowsAffected
+
+	if idAffected == 0 {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "Tidak dapat mengupdate"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"student": "Data berhasil diubah"})
+}
+
 func Delete(c *gin.Context) {}
