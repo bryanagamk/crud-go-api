@@ -1,8 +1,19 @@
 package studentcontroller
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
 
-func Index(c *gin.Context)  {}
+	"github.com/bryanagamk/crud-go-api/models"
+	"github.com/gin-gonic/gin"
+)
+
+func Index(c *gin.Context) {
+	var students []models.Student
+
+	models.DB.Find(&students)
+	c.JSON(http.StatusOK, gin.H{"students": students})
+}
+
 func Store(c *gin.Context)  {}
 func Show(c *gin.Context)   {}
 func Update(c *gin.Context) {}

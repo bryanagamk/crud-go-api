@@ -8,12 +8,12 @@ import (
 var DB *gorm.DB
 
 func ConnectDatabase() {
-	database, err := gorm.Open(mysql.Open("root:@tcp(localhost:3306)/crud_learning_vue"))
+	database, err := gorm.Open(mysql.Open("root:root@tcp(localhost:3306)/crud_learning_vue?parseTime=true"))
 	if err != nil {
 		panic(err)
 	}
 
-	database.AutoMigrate(&Student{})
+	// database.AutoMigrate(&Student{})
 
 	DB = database
 }
