@@ -11,7 +11,7 @@ import (
 func Index(c *gin.Context) {
 	var students []models.Student
 
-	models.DB.Find(&students)
+	models.DB.Where("deleted_at IS NULL").Find(&students)
 	c.JSON(http.StatusOK, gin.H{"data": students})
 }
 
