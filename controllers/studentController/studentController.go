@@ -2,6 +2,7 @@ package studentcontroller
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/bryanagamk/crud-go-api/models"
 	"github.com/gin-gonic/gin"
@@ -64,4 +65,19 @@ func Update(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"student": "Data berhasil diubah"})
 }
 
-func Delete(c *gin.Context) {}
+func Delete(c *gin.Context) {
+	var student models.Student
+	id := c.Param("id")
+	now := time.Now()
+
+	models.DB.First(&student, id)
+	student.DeletedAt = &now
+	idAffected := models.DB.Model(&student).Where("id_student = ?", id).Updates(&student).RowsAffected
+
+	if idAffected == 0 {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "Tidak dapat mengupdate"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"student": "Data berhasil dihapus"})
+}
